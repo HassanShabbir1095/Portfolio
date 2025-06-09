@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="logo">My Portfolio</div>
+    <div class="hamburger">&#9776;</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="skills.html">Skills</a>
+      <a href="education.html">Education</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+  </header>
+
+  <section class="contact" id="contact">
+    <h1>Contact Me</h1>
+    <ul>
+      <li><strong>Name:</strong> Hassan Shabbir</li>
+      <li><strong>Email:</strong> <a href="mailto:hassanshabbir1095@gmail.com">hassanshabbir1095@gmail.com</a></li>
+      <li><strong>Phone:</strong> <a href="tel:+923284106313">+92 328 4106313</a></li>
+    </ul>
+
+    <form 
+      class="contact-form" 
+      action="https://formsubmit.co/hassanshabbir1095@gmail.com" 
+      method="POST"
+    >
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+      <button type="submit" class="btn">Send Message</button>
+
+      <!-- Disable captcha -->
+      <input type="hidden" name="_captcha" value="false">
+      <!-- Optional: Redirect after submit -->
+      <!-- <input type="hidden" name="_next" value="https://yourportfolio.com/thank-you.html"> -->
+    </form>
+  </section>
+</body>
+</html>
