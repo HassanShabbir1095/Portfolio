@@ -1,0 +1,230 @@
+[1mdiff --git a/certificates.js b/certificates.js[m
+[1mindex 552c773..ce7d351 100644[m
+[1m--- a/certificates.js[m
+[1m+++ b/certificates.js[m
+[36m@@ -19,6 +19,14 @@[m [mimport {[m
+ } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";[m
+ [m
+ [m
+[32m+[m[32m// ============================================================[m
+[32m+[m[32m// CLOUDFLARE WORKER[m
+[32m+[m[32m// ============================================================[m
+[32m+[m
+[32m+[m[32mconst WORKER_URL =[m
+[32m+[m[32m    "https://hassan-portfolio-worker.hassanshabbir1095.workers.dev";[m
+[32m+[m
+[32m+[m
+ // ============================================================[m
+ // GET ELEMENTS[m
+ // ============================================================[m
+[36m@@ -28,11 +36,13 @@[m [mconst certificatesList =[m
+         "certificatesList"[m
+     );[m
+ [m
+[32m+[m
+ const certificatesStatus =[m
+     document.getElementById([m
+         "certificatesStatus"[m
+     );[m
+ [m
+[32m+[m
+ const noCertificatesMessage =[m
+     document.getElementById([m
+         "noCertificatesMessage"[m
+[36m@@ -43,19 +53,36 @@[m [mconst noCertificatesMessage =[m
+ // ESCAPE HTML[m
+ // ============================================================[m
+ [m
+[31m-function escapeHTML([m
+[31m-    value[m
+[31m-) {[m
+[32m+[m[32mfunction escapeHTML(value) {[m
+ [m
+     const div =[m
+         document.createElement([m
+             "div"[m
+         );[m
+ [m
+[32m+[m
+     div.textContent =[m
+         value ?? "";[m
+ [m
+[32m+[m
+     return div.innerHTML;[m
+[32m+[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m
+[32m+[m[32m// ============================================================[m
+[32m+[m[32m// CREATE CERTIFICATE VIEWER URL[m
+[32m+[m[32m// ============================================================[m
+[32m+[m
+[32m+[m[32mfunction createCertificateViewerURL([m
+[32m+[m[32m    storagePath[m
+[32m+[m[32m) {[m
+[32m+[m
+[32m+[m[32m    return ([m
+[32m+[m[32m        `certificate-viewer.html?path=` +[m
+[32m+[m[32m        `${encodeURIComponent(storagePath)}`[m
+[32m+[m[32m    );[m
+[32m+[m
+ }[m
+ [m
+ [m
+[36m@@ -73,9 +100,29 @@[m [mfunction createCertificateCard([m
+         "Untitled Certificate";[m
+ [m
+ [m
+[31m-    const certificateURL =[m
+[31m-        certificate.fileURL ||[m
+[31m-        "#";[m
+[32m+[m[32m    // --------------------------------------------------------[m
+[32m+[m[32m    // IMPORTANT:[m
+[32m+[m[32m    //[m
+[32m+[m[32m    // Use storagePath instead of fileURL.[m
+[32m+[m[32m    //[m
+[32m+[m[32m    // Example:[m
+[32m+[m[32m    //[m
+[32m+[m[32m    // certificates/1787548600636-certificate.pdf[m
+[32m+[m[32m    //[m
+[32m+[m[32m    // The viewer will send this path to Cloudflare Worker.[m
+[32m+[m[32m    // --------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m    const storagePath =[m
+[32m+[m[32m        certificate.storagePath ||[m
+[32m+[m[32m        "";[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    const viewerURL =[m
+[32m+[m[32m        storagePath[m
+[32m+[m[32m            ? createCertificateViewerURL([m
+[32m+[m[32m                storagePath[m
+[32m+[m[32m            )[m
+[32m+[m[32m            : "#";[m
+ [m
+ [m
+     const card =[m
+[36m@@ -128,9 +175,7 @@[m [mfunction createCertificateCard([m
+             <div class="certificate-buttons">[m
+ [m
+                 <a[m
+[31m-                    href="${escapeHTML([m
+[31m-                        certificateURL[m
+[31m-                    )}"[m
+[32m+[m[32m                    href="${escapeHTML(viewerURL)}"[m
+                     target="_blank"[m
+                     rel="noopener noreferrer"[m
+                     class="btn certificate-btn"[m
+[36m@@ -142,23 +187,6 @@[m [mfunction createCertificateCard([m
+ [m
+                 </a>[m
+ [m
+[31m-[m
+[31m-                <a[m
+[31m-                    href="${escapeHTML([m
+[31m-                        certificateURL[m
+[31m-                    )}"[m
+[31m-                    target="_blank"[m
+[31m-                    rel="noopener noreferrer"[m
+[31m-                    class="btn certificate-btn"[m
+[31m-                    download[m
+[31m-                >[m
+[31m-[m
+[31m-                    <i class="fa-solid fa-download"></i>[m
+[31m-[m
+[31m-                    Download[m
+[31m-[m
+[31m-                </a>[m
+[31m-[m
+             </div>[m
+ [m
+         </div>[m
+[36m@@ -167,6 +195,7 @@[m [mfunction createCertificateCard([m
+ [m
+ [m
+     return card;[m
+[32m+[m
+ }[m
+ [m
+ [m
+[36m@@ -191,6 +220,7 @@[m [mfunction loadCertificates() {[m
+ [m
+     const certificatesQuery =[m
+         query([m
+[32m+[m
+             collection([m
+                 db,[m
+                 "certificates"[m
+[36m@@ -200,14 +230,16 @@[m [mfunction loadCertificates() {[m
+                 "createdAt",[m
+                 "desc"[m
+             )[m
+[32m+[m
+         );[m
+ [m
+ [m
+[31m-    // --------------------------------------------------------[m
+[32m+[m[32m    // ========================================================[m
+     // REAL-TIME LISTENER[m
+[31m-    // --------------------------------------------------------[m
+[32m+[m[32m    // ========================================================[m
+ [m
+     onSnapshot([m
+[32m+[m
+         certificatesQuery,[m
+ [m
+ [m
+[36m@@ -228,10 +260,13 @@[m [mfunction loadCertificates() {[m
+                 certificatesStatus.style.display =[m
+                     "none";[m
+ [m
+[32m+[m
+                 noCertificatesMessage.style.display =[m
+                     "block";[m
+ [m
+[32m+[m
+                 return;[m
+[32m+[m
+             }[m
+ [m
+ [m
+[36m@@ -248,6 +283,7 @@[m [mfunction loadCertificates() {[m
+ [m
+ [m
+             snapshot.forEach([m
+[32m+[m
+                 ([m
+                     docSnapshot,[m
+                     index[m
+[36m@@ -267,14 +303,17 @@[m [mfunction loadCertificates() {[m
+                     certificatesList.appendChild([m
+                         certificateCard[m
+                     );[m
+[32m+[m
+                 }[m
+[32m+[m
+             );[m
+[32m+[m
+         },[m
+ [m
+ [m
+[31m-        // ----------------------------------------------------[m
+[32m+[m[32m        // ====================================================[m
+         // ERROR[m
+[31m-        // ----------------------------------------------------[m
+[32m+[m[32m        // ====================================================[m
+ [m
+         (error) => {[m
+ [m
+[36m@@ -295,8 +334,11 @@[m [mfunction loadCertificates() {[m
+                 Unable to load certificates.[m
+ [m
+             `;[m
+[32m+[m
+         }[m
+[32m+[m
+     );[m
+[32m+[m
+ }[m
+ [m
+ [m

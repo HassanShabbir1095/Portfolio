@@ -20,6 +20,14 @@ import {
 
 
 // ============================================================
+// CLOUDFLARE WORKER
+// ============================================================
+
+const WORKER_URL =
+    "https://hassan-portfolio-worker.hassanshabbir1095.workers.dev";
+
+
+// ============================================================
 // GET ELEMENTS
 // ============================================================
 
@@ -28,10 +36,12 @@ const certificatesList =
         "certificatesList"
     );
 
+
 const certificatesStatus =
     document.getElementById(
         "certificatesStatus"
     );
+
 
 const noCertificatesMessage =
     document.getElementById(
@@ -43,19 +53,36 @@ const noCertificatesMessage =
 // ESCAPE HTML
 // ============================================================
 
-function escapeHTML(
-    value
-) {
+function escapeHTML(value) {
 
     const div =
         document.createElement(
             "div"
         );
 
+
     div.textContent =
         value ?? "";
 
+
     return div.innerHTML;
+
+}
+
+
+// ============================================================
+// CREATE CERTIFICATE VIEWER URL
+// ============================================================
+
+function createCertificateViewerURL(
+    storagePath
+) {
+
+    return (
+        `certificate-viewer.html?path=` +
+        `${encodeURIComponent(storagePath)}`
+    );
+
 }
 
 
@@ -73,9 +100,29 @@ function createCertificateCard(
         "Untitled Certificate";
 
 
-    const certificateURL =
-        certificate.fileURL ||
-        "#";
+    // --------------------------------------------------------
+    // IMPORTANT:
+    //
+    // Use storagePath instead of fileURL.
+    //
+    // Example:
+    //
+    // certificates/1787548600636-certificate.pdf
+    //
+    // The viewer will send this path to Cloudflare Worker.
+    // --------------------------------------------------------
+
+    const storagePath =
+        certificate.storagePath ||
+        "";
+
+
+    const viewerURL =
+        storagePath
+            ? createCertificateViewerURL(
+                storagePath
+            )
+            : "#";
 
 
     const card =
@@ -128,9 +175,7 @@ function createCertificateCard(
             <div class="certificate-buttons">
 
                 <a
-                    href="${escapeHTML(
-                        certificateURL
-                    )}"
+                    href="${escapeHTML(viewerURL)}"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="btn certificate-btn"
@@ -142,23 +187,6 @@ function createCertificateCard(
 
                 </a>
 
-
-                <a
-                    href="${escapeHTML(
-                        certificateURL
-                    )}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn certificate-btn"
-                    download
-                >
-
-                    <i class="fa-solid fa-download"></i>
-
-                    Download
-
-                </a>
-
             </div>
 
         </div>
@@ -167,6 +195,7 @@ function createCertificateCard(
 
 
     return card;
+
 }
 
 
@@ -191,6 +220,7 @@ function loadCertificates() {
 
     const certificatesQuery =
         query(
+
             collection(
                 db,
                 "certificates"
@@ -200,14 +230,16 @@ function loadCertificates() {
                 "createdAt",
                 "desc"
             )
+
         );
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // REAL-TIME LISTENER
-    // --------------------------------------------------------
+    // ========================================================
 
     onSnapshot(
+
         certificatesQuery,
 
 
@@ -228,10 +260,13 @@ function loadCertificates() {
                 certificatesStatus.style.display =
                     "none";
 
+
                 noCertificatesMessage.style.display =
                     "block";
 
+
                 return;
+
             }
 
 
@@ -248,6 +283,7 @@ function loadCertificates() {
 
 
             snapshot.forEach(
+
                 (
                     docSnapshot,
                     index
@@ -267,14 +303,17 @@ function loadCertificates() {
                     certificatesList.appendChild(
                         certificateCard
                     );
+
                 }
+
             );
+
         },
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // ERROR
-        // ----------------------------------------------------
+        // ====================================================
 
         (error) => {
 
@@ -295,8 +334,11 @@ function loadCertificates() {
                 Unable to load certificates.
 
             `;
+
         }
+
     );
+
 }
 
 

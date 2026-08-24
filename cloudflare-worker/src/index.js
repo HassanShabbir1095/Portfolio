@@ -2,16 +2,14 @@
 // HASSAN PORTFOLIO - GITHUB FILE STORAGE WORKER
 // ============================================================
 //
-// This Cloudflare Worker receives files from the portfolio
-// admin panel and uploads them securely to a GitHub repository.
+// This Worker:
 //
-// Supported files:
-//   - ZIP project files
-//   - PDF certificate files
+// 1. Uploads project ZIP files to GitHub.
+// 2. Uploads certificate PDF files to GitHub.
+// 3. Serves certificate PDFs through a controlled endpoint.
 //
-// IMPORTANT:
-// The GitHub token is NEVER exposed to the browser.
-// It is stored securely as a Cloudflare Worker secret.
+// GitHub token is NEVER exposed to the browser.
+// It remains stored as a Cloudflare Worker secret.
 //
 // ============================================================
 
@@ -20,63 +18,44 @@
 // CONFIGURATION
 // ============================================================
 
-const GITHUB_OWNER = "HassanShabbir1095";
+const GITHUB_OWNER =
+    "HassanShabbir1095";
 
-const GITHUB_REPOSITORY = "hassan-portfolio-files";
+const GITHUB_REPOSITORY =
+    "hassan-portfolio-files";
 
-const GITHUB_BRANCH = "main";
+const GITHUB_BRANCH =
+    "main";
 
 const GITHUB_API_BASE =
     "https://api.github.com";
+
+const GITHUB_RAW_BASE =
+    "https://raw.githubusercontent.com";
 
 
 // ============================================================
 // CORS
 // ============================================================
-//
-// IMPORTANT:
-//
-// Add your real GitHub Pages URL below.
-//
-// For example:
-//
-// https://hassanshabbir1095.github.io
-//
-// If your portfolio repository uses a project path, the Origin
-// is STILL only:
-//
-// https://hassanshabbir1095.github.io
-//
-// NOT:
-// https://hassanshabbir1095.github.io/repository-name
-//
-// ============================================================
-
-const ALLOWED_ORIGINS = [
-
-    // GitHub Pages portfolio
-    "https://hassanshabbir1095.github.io",
-
-    // Local development
-    "http://localhost:5500",
-    "http://127.0.0.1:5500"
-
-];
-
-
-// ============================================================
-// GET CORS HEADERS
-// ============================================================
 
 function getCorsHeaders(origin) {
 
-    // If the request comes from one of our allowed origins,
-    // return that exact origin.
+    const allowedOrigins = [
+
+        // Live GitHub Pages portfolio
+        "https://hassanshabbir1095.github.io",
+
+        // Local development
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+
+    ];
+
 
     const allowedOrigin =
-        ALLOWED_ORIGINS.includes(origin)
+        allowedOrigins.includes(origin)
             ? origin
-            : ALLOWED_ORIGINS[0];
+            : allowedOrigins[0];
 
 
     return {
@@ -85,16 +64,13 @@ function getCorsHeaders(origin) {
             allowedOrigin,
 
         "Access-Control-Allow-Methods":
-            "POST, OPTIONS",
+            "GET, POST, OPTIONS",
 
         "Access-Control-Allow-Headers":
             "Content-Type",
 
         "Access-Control-Max-Age":
-            "86400",
-
-        "Vary":
-            "Origin"
+            "86400"
 
     };
 
@@ -102,13 +78,13 @@ function getCorsHeaders(origin) {
 
 
 // ============================================================
-// CREATE JSON RESPONSE
+// JSON RESPONSE
 // ============================================================
 
 function jsonResponse(
     data,
-    status = 200,
-    origin = ""
+    status,
+    origin
 ) {
 
     return new Response(
@@ -136,7 +112,7 @@ function jsonResponse(
 
 
 // ============================================================
-// HANDLE OPTIONS REQUEST
+// OPTIONS REQUEST
 // ============================================================
 
 function handleOptions(request) {
@@ -167,30 +143,31 @@ function handleOptions(request) {
 // SANITIZE FILE NAME
 // ============================================================
 
-function sanitizeFileName(fileName) {
+function sanitizeFileName(
+    fileName
+) {
 
     return fileName
 
-        // Replace unsafe characters
         .replace(
             /[^a-zA-Z0-9._-]/g,
             "_"
         )
 
-        // Replace multiple underscores
         .replace(
             /_+/g,
             "_"
         )
 
-        // Remove underscores from beginning/end
         .replace(
             /^_+|_+$/g,
             ""
         )
 
-        // Limit file name length
-        .slice(0, 180);
+        .slice(
+            0,
+            180
+        );
 
 }
 
@@ -199,7 +176,9 @@ function sanitizeFileName(fileName) {
 // CREATE PROJECT PATH
 // ============================================================
 
-function createProjectPath(fileName) {
+function createProjectPath(
+    fileName
+) {
 
     const safeName =
         sanitizeFileName(fileName);
@@ -209,7 +188,9 @@ function createProjectPath(fileName) {
         Date.now();
 
 
-    return `projects/${timestamp}-${safeName}`;
+    return (
+        `projects/${timestamp}-${safeName}`
+    );
 
 }
 
@@ -218,7 +199,9 @@ function createProjectPath(fileName) {
 // CREATE CERTIFICATE PATH
 // ============================================================
 
-function createCertificatePath(fileName) {
+function createCertificatePath(
+    fileName
+) {
 
     const safeName =
         sanitizeFileName(fileName);
@@ -228,7 +211,9 @@ function createCertificatePath(fileName) {
         Date.now();
 
 
-    return `certificates/${timestamp}-${safeName}`;
+    return (
+        `certificates/${timestamp}-${safeName}`
+    );
 
 }
 
@@ -241,10 +226,6 @@ function validateFile(
     file,
     type
 ) {
-
-    // --------------------------------------------------------
-    // CHECK FILE EXISTS
-    // --------------------------------------------------------
 
     if (!file) {
 
@@ -259,10 +240,6 @@ function validateFile(
 
     }
 
-
-    // --------------------------------------------------------
-    // CHECK FILE NAME
-    // --------------------------------------------------------
 
     if (!file.name) {
 
@@ -283,12 +260,14 @@ function validateFile(
 
 
     // --------------------------------------------------------
-    // VALIDATE PROJECT
+    // PROJECT
     // --------------------------------------------------------
 
     if (type === "project") {
 
-        if (!fileName.endsWith(".zip")) {
+        if (
+            !fileName.endsWith(".zip")
+        ) {
 
             return {
 
@@ -305,12 +284,14 @@ function validateFile(
 
 
     // --------------------------------------------------------
-    // VALIDATE CERTIFICATE
+    // CERTIFICATE
     // --------------------------------------------------------
 
     if (type === "certificate") {
 
-        if (!fileName.endsWith(".pdf")) {
+        if (
+            !fileName.endsWith(".pdf")
+        ) {
 
             return {
 
@@ -326,10 +307,6 @@ function validateFile(
     }
 
 
-    // --------------------------------------------------------
-    // VALID
-    // --------------------------------------------------------
-
     return {
 
         valid: true
@@ -340,17 +317,130 @@ function validateFile(
 
 
 // ============================================================
-// CONVERT ARRAY BUFFER TO BASE64
-// ============================================================
-//
-// GitHub Contents API requires file content as Base64.
-//
+// GITHUB API UPLOAD
 // ============================================================
 
-function arrayBufferToBase64(arrayBuffer) {
+async function uploadToGitHub(
+    env,
+    path,
+    base64Content,
+    commitMessage
+) {
+
+    const url =
+        `${GITHUB_API_BASE}/repos/` +
+        `${GITHUB_OWNER}/` +
+        `${GITHUB_REPOSITORY}/` +
+        `contents/${path}`;
+
+
+    const response =
+        await fetch(
+
+            url,
+
+            {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Accept":
+                        "application/vnd.github+json",
+
+                    "Authorization":
+                        `Bearer ${env.GITHUB_TOKEN}`,
+
+                    "X-GitHub-Api-Version":
+                        "2026-03-10",
+
+                    "User-Agent":
+                        "hassan-portfolio-worker",
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        message:
+                            commitMessage,
+
+                        content:
+                            base64Content,
+
+                        branch:
+                            GITHUB_BRANCH
+
+                    })
+
+            }
+
+        );
+
+
+    const responseText =
+        await response.text();
+
+
+    let responseData;
+
+
+    try {
+
+        responseData =
+            JSON.parse(responseText);
+
+    } catch {
+
+        responseData = {
+
+            message:
+                responseText
+
+        };
+
+    }
+
+
+    if (!response.ok) {
+
+        console.error(
+            "GitHub API error:",
+            response.status,
+            responseData
+        );
+
+
+        throw new Error(
+
+            responseData.message ||
+            `GitHub API returned ${response.status}`
+
+        );
+
+    }
+
+
+    return responseData;
+
+}
+
+
+// ============================================================
+// ARRAY BUFFER → BASE64
+// ============================================================
+
+function arrayBufferToBase64(
+    arrayBuffer
+) {
 
     const bytes =
-        new Uint8Array(arrayBuffer);
+        new Uint8Array(
+            arrayBuffer
+        );
 
 
     const chunkSize =
@@ -388,153 +478,6 @@ function arrayBufferToBase64(arrayBuffer) {
 
 
 // ============================================================
-// UPLOAD FILE TO GITHUB
-// ============================================================
-
-async function uploadToGitHub(
-    env,
-    path,
-    base64Content,
-    commitMessage
-) {
-
-    // --------------------------------------------------------
-    // CHECK GITHUB TOKEN
-    // --------------------------------------------------------
-
-    if (!env.GITHUB_TOKEN) {
-
-        throw new Error(
-
-            "GitHub token is not configured in the Cloudflare Worker."
-
-        );
-
-    }
-
-
-    // --------------------------------------------------------
-    // CREATE GITHUB CONTENTS API URL
-    // --------------------------------------------------------
-
-    const url =
-        `${GITHUB_API_BASE}` +
-        `/repos/${GITHUB_OWNER}` +
-        `/${GITHUB_REPOSITORY}` +
-        `/contents/${path}`;
-
-
-    // --------------------------------------------------------
-    // SEND FILE TO GITHUB
-    // --------------------------------------------------------
-
-    const response =
-        await fetch(
-
-            url,
-
-            {
-
-                method: "PUT",
-
-                headers: {
-
-                    "Accept":
-                        "application/vnd.github+json",
-
-                    "Authorization":
-                        `Bearer ${env.GITHUB_TOKEN}`,
-
-                    "X-GitHub-Api-Version":
-                        "2022-11-28",
-
-                    "User-Agent":
-                        "hassan-portfolio-worker",
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body: JSON.stringify({
-
-                    message:
-                        commitMessage,
-
-                    content:
-                        base64Content,
-
-                    branch:
-                        GITHUB_BRANCH
-
-                })
-
-            }
-
-        );
-
-
-    // --------------------------------------------------------
-    // READ RESPONSE
-    // --------------------------------------------------------
-
-    const responseText =
-        await response.text();
-
-
-    let responseData;
-
-
-    try {
-
-        responseData =
-            JSON.parse(responseText);
-
-    } catch {
-
-        responseData = {
-
-            message:
-                responseText
-
-        };
-
-    }
-
-
-    // --------------------------------------------------------
-    // HANDLE GITHUB ERROR
-    // --------------------------------------------------------
-
-    if (!response.ok) {
-
-        console.error(
-
-            "GitHub API Error:",
-
-            response.status,
-
-            responseData
-
-        );
-
-
-        throw new Error(
-
-            responseData.message ||
-            `GitHub API returned HTTP ${response.status}`
-
-        );
-
-    }
-
-
-    return responseData;
-
-}
-
-
-// ============================================================
 // HANDLE FILE UPLOAD
 // ============================================================
 
@@ -564,7 +507,7 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // VALIDATE UPLOAD TYPE
+    // VALIDATE TYPE
     // --------------------------------------------------------
 
     if (
@@ -626,23 +569,19 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // FILE SIZE LIMIT
+    // FILE SIZE
     // --------------------------------------------------------
-    //
-    // We use a conservative limit because the file must be
-    // received by the Worker and Base64 encoded before sending
-    // it to GitHub.
-    //
-    // Keep portfolio ZIP/PDF files reasonably small.
-    //
-    // ========================================================
+
+    const fileSize =
+        file.size;
+
 
     const MAX_FILE_SIZE =
-        20 * 1024 * 1024;
+        90 * 1024 * 1024;
 
 
     if (
-        file.size >
+        fileSize >
         MAX_FILE_SIZE
     ) {
 
@@ -654,7 +593,7 @@ async function handleUpload(
 
                 message:
                     "File is too large. " +
-                    "Please keep each ZIP or PDF file below 20 MB."
+                    "Please keep portfolio files below 90 MB."
 
             },
 
@@ -668,16 +607,12 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // READ FILE
+    // CONVERT FILE
     // --------------------------------------------------------
 
     const arrayBuffer =
         await file.arrayBuffer();
 
-
-    // --------------------------------------------------------
-    // CONVERT FILE TO BASE64
-    // --------------------------------------------------------
 
     const base64Content =
         arrayBufferToBase64(
@@ -686,7 +621,7 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // CREATE STORAGE PATH
+    // CREATE PATH
     // --------------------------------------------------------
 
     const path =
@@ -702,7 +637,7 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // CREATE COMMIT MESSAGE
+    // COMMIT MESSAGE
     // --------------------------------------------------------
 
     const commitMessage =
@@ -732,11 +667,11 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // CREATE RAW FILE URL
+    // RAW GITHUB URL
     // --------------------------------------------------------
 
     const rawUrl =
-        `https://raw.githubusercontent.com/` +
+        `${GITHUB_RAW_BASE}/` +
         `${GITHUB_OWNER}/` +
         `${GITHUB_REPOSITORY}/` +
         `${GITHUB_BRANCH}/` +
@@ -744,7 +679,7 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // CREATE GITHUB FILE PAGE URL
+    // GITHUB WEB URL
     // --------------------------------------------------------
 
     const githubUrl =
@@ -756,7 +691,7 @@ async function handleUpload(
 
 
     // --------------------------------------------------------
-    // SUCCESS RESPONSE
+    // SUCCESS
     // --------------------------------------------------------
 
     return jsonResponse(
@@ -773,8 +708,7 @@ async function handleUpload(
             fileName:
                 file.name,
 
-            fileSize:
-                file.size,
+            fileSize,
 
             storagePath:
                 path,
@@ -801,6 +735,208 @@ async function handleUpload(
 
 
 // ============================================================
+// HANDLE CERTIFICATE VIEW
+// ============================================================
+//
+// IMPORTANT:
+//
+// The browser does NOT directly access GitHub.
+//
+// Instead:
+//
+// Browser
+//    ↓
+// Cloudflare Worker
+//    ↓
+// GitHub Raw PDF
+//    ↓
+// Worker returns PDF as "inline"
+//    ↓
+// Browser PDF viewer
+//
+// Only files inside certificates/ are allowed.
+//
+// ============================================================
+
+async function handleCertificateView(
+    request
+) {
+
+    const url =
+        new URL(
+            request.url
+        );
+
+
+    const path =
+        url.searchParams.get(
+            "path"
+        );
+
+
+    // --------------------------------------------------------
+    // PATH REQUIRED
+    // --------------------------------------------------------
+
+    if (!path) {
+
+        return new Response(
+
+            "Certificate path is required.",
+
+            {
+
+                status: 400,
+
+                headers: {
+
+                    "Content-Type":
+                        "text/plain; charset=UTF-8"
+
+                }
+
+            }
+
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // SECURITY VALIDATION
+    // --------------------------------------------------------
+    //
+    // Only certificates/*.pdf are allowed.
+    //
+    // This prevents this Worker endpoint from becoming
+    // a general-purpose proxy for arbitrary URLs.
+    //
+
+    if (
+        !path.startsWith("certificates/")
+        ||
+        !path.toLowerCase().endsWith(".pdf")
+        ||
+        path.includes("..")
+        ||
+        path.includes("\\")
+        ||
+        path.includes("//")
+    ) {
+
+        return new Response(
+
+            "Invalid certificate path.",
+
+            {
+
+                status: 400,
+
+                headers: {
+
+                    "Content-Type":
+                        "text/plain; charset=UTF-8"
+
+                }
+
+            }
+
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // CREATE GITHUB RAW URL
+    // --------------------------------------------------------
+
+    const githubURL =
+        `${GITHUB_RAW_BASE}/` +
+        `${GITHUB_OWNER}/` +
+        `${GITHUB_REPOSITORY}/` +
+        `${GITHUB_BRANCH}/` +
+        `${path}`;
+
+
+    // --------------------------------------------------------
+    // FETCH PDF FROM GITHUB
+    // --------------------------------------------------------
+
+    const githubResponse =
+        await fetch(
+            githubURL
+        );
+
+
+    if (!githubResponse.ok) {
+
+        return new Response(
+
+            "Certificate could not be found.",
+
+            {
+
+                status:
+                    githubResponse.status,
+
+                headers: {
+
+                    "Content-Type":
+                        "text/plain; charset=UTF-8"
+
+                }
+
+            }
+
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // GET PDF CONTENT
+    // --------------------------------------------------------
+
+    const pdfData =
+        await githubResponse.arrayBuffer();
+
+
+    // --------------------------------------------------------
+    // RETURN PDF INLINE
+    // --------------------------------------------------------
+
+    return new Response(
+
+        pdfData,
+
+        {
+
+            status: 200,
+
+            headers: {
+
+                "Content-Type":
+                    "application/pdf",
+
+                "Content-Disposition":
+                    "inline",
+
+                "Cache-Control":
+                    "public, max-age=3600",
+
+                "X-Content-Type-Options":
+                    "nosniff"
+
+            }
+
+        }
+
+    );
+
+}
+
+
+// ============================================================
 // MAIN WORKER
 // ============================================================
 
@@ -818,11 +954,13 @@ export default {
 
 
         const origin =
-            request.headers.get("Origin") || "";
+            request.headers.get(
+                "Origin"
+            ) || "";
 
 
         // ----------------------------------------------------
-        // HANDLE CORS PREFLIGHT
+        // CORS
         // ----------------------------------------------------
 
         if (
@@ -841,7 +979,8 @@ export default {
         // ----------------------------------------------------
 
         if (
-            url.pathname === "/" &&
+            url.pathname === "/"
+            &&
             request.method === "GET"
         ) {
 
@@ -869,11 +1008,60 @@ export default {
 
 
         // ----------------------------------------------------
+        // CERTIFICATE VIEWER
+        // ----------------------------------------------------
+
+        if (
+            url.pathname === "/certificate"
+            &&
+            request.method === "GET"
+        ) {
+
+            try {
+
+                return await handleCertificateView(
+                    request
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Certificate viewer error:",
+                    error
+                );
+
+
+                return new Response(
+
+                    "Unable to load certificate.",
+
+                    {
+
+                        status: 500,
+
+                        headers: {
+
+                            "Content-Type":
+                                "text/plain; charset=UTF-8"
+
+                        }
+
+                    }
+
+                );
+
+            }
+
+        }
+
+
+        // ----------------------------------------------------
         // UPLOAD ENDPOINT
         // ----------------------------------------------------
 
         if (
-            url.pathname === "/upload" &&
+            url.pathname === "/upload"
+            &&
             request.method === "POST"
         ) {
 
@@ -887,7 +1075,7 @@ export default {
             } catch (error) {
 
                 console.error(
-                    "Upload Error:",
+                    "Upload error:",
                     error
                 );
 
