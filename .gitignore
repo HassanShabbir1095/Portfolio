@@ -1,0 +1,7 @@
+# Cloudflare Worker generated files
+cloudflare-worker/node_modules/
+cloudflare-worker/.wrangler/
+
+# Local/system files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Hassan Portfolio - Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
+
+    <header>
+
+        <a href="index.html" class="logo">
+            Hassan
+        </a>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="certificates.html">Certificates</a>
+        </nav>
+
+    </header>
+
+
+    <!-- ============================= -->
+    <!-- ADMIN PAGE -->
+    <!-- ============================= -->
+
+    <main class="admin-page">
+
+        <div class="admin-container">
+
+            <!-- PAGE HEADING -->
+
+            <div class="admin-heading">
+
+                <h1>
+                    Portfolio <span>Admin</span>
+                </h1>
+
+                <p class="admin-description">
+                    Manage your portfolio projects and certificates
+                    securely from one place.
+                </p>
+
+            </div>
+
+
+            <!-- AUTHENTICATION STATUS -->
+
+            <div
+                id="adminStatus"
+                class="admin-status"
+            >
+                Checking authentication...
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- LOGIN SECTION -->
+            <!-- ============================= -->
+
+            <div
+                id="loginSection"
+                class="admin-card login-card"
+            >
+
+                <div class="admin-card-header">
+
+                    <div class="admin-card-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>Admin Login</h2>
+
+                        <p>
+                            Login to manage your projects
+                            and certificates.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="admin-input-group">
+
+                    <label for="email">
+                        <i class="fa-solid fa-envelope"></i>
+                        Admin Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your admin email"
+                        autocomplete="email"
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="admin-input-group">
+
+                    <label for="password">
+                        <i class="fa-solid fa-key"></i>
+                        Password
+                    </label>
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePasswordBtn"
+                            class="toggle-password-btn"
+                            aria-label="Show password"
+                        >
+                            <i
+                                id="togglePasswordIcon"
+                                class="fa-solid fa-eye"
+                            ></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    id="loginBtn"
+                    class="btn admin-main-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Login</span>
+                </button>
+
+
+                <!-- FORGOT PASSWORD -->
+
+                <button
+                    id="forgotPasswordBtn"
+                    class="forgot-password-btn"
+                    type="button"
+                >
+                    <i class="fa-solid fa-unlock-keyhole"></i>
+                    Forgot Password?
+                </button>
+
+
+                <!-- LOGIN MESSAGE -->
+
+                <p
+                    id="loginMessage"
+                    class="admin-message"
+                ></p>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- ADMIN CONTROLS -->
+            <!-- ============================= -->
+
+            <div
+                id="adminControls"
+                style="display: none;"
+            >
+
+                <!-- WELCOME CARD -->
+
+                <div class="admin-welcome-card">
+
+                    <div class="admin-welcome-icon">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Admin Dashboard
+                        </h2>
+
+                        <p>
+                            Upload and manage your portfolio
+                            content from here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADMIN GRID -->
+
+                <div class="admin-management-grid">
+
+
+                    <!-- ============================= -->
+                    <!-- PROJECT UPLOAD -->
+                    <!-- ============================= -->
+
+                    <div class="admin-card">
+
+                        <div class="admin-card-header">
+
+                            <div class="admin-card-icon">
+
+                                <i
+                                    class="fa-solid fa-folder-plus"
+                                ></i>
+
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Upload Project
+                                </h2>
+
+                                <p>
+                                    Upload your complete project
+                                    as a ZIP file.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="upload-info">
+
+                            <i
+                                class="fa-solid fa-circle-info"
+                            ></i>
+
+                            The project name will automatically
+                            be created from the ZIP filename.
+
+                        </div>
+
+
+                        <label
+                            for="projectFile"
+                            class="file-label"
+                        >
+                            <i
+                                class="fa-solid fa-file-zipper"
+                            ></i>
+
+                            <span>
+                                Choose ZIP Project
+                            </span>
+                        </label>
+
+
+                        <input
+                            type="file"
+                            id="projectFile"
+                            accept=".zip"
+                            class="file-input"
+                        >
+
+
+                        <p
+                            id="projectSelectedFile"
+                            class="selected-file"
+                        >
+                            No project selected.
+                        </p>
+
+
+                        <button
+                            id="uploadProjectBtn"
+                            class="btn admin-main-btn"
+                            type="button"
+                        >
+
+                            <i
+                                class="fa-solid fa-cloud-arrow-up"
+                            ></i>
+
+                            <span>
+                                Upload Project
+                            </span>
+
+                        </button>
+
+
+                        <p
+                            id="projectUploadStatus"
+                            class="admin-message"
+                        ></p>
+
+                    </div>
+
+
+                    <!-- ============================= -->
+                    <!-- CERTIFICATE UPLOAD -->
+                    <!-- ============================= -->
+
+                    <div class="admin-card">
+
+                        <div class="admin-card-header">
+
+                            <div class="admin-card-icon">
+
+                                <i
+                                    class="fa-solid fa-certificate"
+                                ></i>
+
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Upload Certificate
+                                </h2>
+
+                                <p>
+                                    Upload your certificate
+                                    as a PDF file.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="upload-info">
+
+                            <i
+                                class="fa-solid fa-circle-info"
+                            ></i>
+
+                            The certificate name will automatically
+                            be created from the PDF filename.
+
+                        </div>
+
+
+                        <label
+                            for="certificateFile"
+                            class="file-label"
+                        >
+
+                            <i
+                                class="fa-solid fa-file-pdf"
+                            ></i>
+
+                            <span>
+                                Choose PDF Certificate
+                            </span>
+
+                        </label>
+
+
+                        <input
+                            type="file"
+                            id="certificateFile"
+                            accept=".pdf"
+                            class="file-input"
+                        >
+
+
+                        <p
+                            id="certificateSelectedFile"
+                            class="selected-file"
+                        >
+                            No certificate selected.
+                        </p>
+
+
+                        <button
+                            id="uploadCertificateBtn"
+                            class="btn admin-main-btn"
+                            type="button"
+                        >
+
+                            <i
+                                class="fa-solid fa-cloud-arrow-up"
+                            ></i>
+
+                            <span>
+                                Upload Certificate
+                            </span>
+
+                        </button>
+
+
+                        <p
+                            id="certificateUploadStatus"
+                            class="admin-message"
+                        ></p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGOUT -->
+
+                <div class="logout-container">
+
+                    <button
+                        id="logoutBtn"
+                        class="btn logout-btn"
+                        type="button"
+                    >
+
+                        <i
+                            class="fa-solid fa-right-from-bracket"
+                        ></i>
+
+                        Logout
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="admin.js"
+    ></script>
+
+</body>
+
+</html>

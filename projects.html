@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet"
+          href="style.css">
+
+    <title>Projects - Hassan Portfolio</title>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header>
+
+        <a href="index.html" class="logo">
+            Hassan
+        </a>
+
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="skills.html">
+                Skills
+            </a>
+
+            <a href="projects.html" class="active">
+                Projects
+            </a>
+
+            <a href="education.html">
+                Education
+            </a>
+
+            <a href="certificates.html">
+                Certificates
+            </a>
+
+            <a href="contact.html">
+                Contact
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =========================================================
+         PROJECTS SECTION
+    ========================================================== -->
+
+    <section class="projects">
+
+        <div class="projects-heading">
+
+            <h1>
+                My <span>Projects</span>
+            </h1>
+
+            <p>
+                A collection of my Artificial Intelligence,
+                Machine Learning, Data Science, and
+                Software Development projects.
+            </p>
+
+        </div>
+
+
+        <!-- PROJECT STATUS -->
+
+        <div id="projectsStatus"
+             class="dynamic-status">
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Loading projects...
+
+        </div>
+
+
+        <!-- =====================================================
+             PROJECTS WILL BE AUTOMATICALLY INSERTED HERE
+        ====================================================== -->
+
+        <div id="projectsGrid"
+             class="projects-grid">
+
+        </div>
+
+
+        <!-- =====================================================
+             EMPTY STATE
+        ====================================================== -->
+
+        <div id="noProjectsMessage"
+             class="no-content-message"
+             style="display: none;">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h2>
+                No Projects Available Yet
+            </h2>
+
+            <p>
+                Projects will appear here automatically
+                after they are uploaded.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         SCRIPTS
+    ========================================================== -->
+
+    <script src="script.js"></script>
+
+    <script type="module"
+            src="projects.js">
+    </script>
+
+</body>
+
+</html>

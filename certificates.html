@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
+    <link rel="stylesheet"
+          href="style.css">
+
+
+    <title>
+        Certificates - Hassan Portfolio
+    </title>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header>
+
+        <a href="index.html"
+           class="logo">
+
+            Hassan
+
+        </a>
+
+
+        <div class="hamburger">
+
+            <i class="fas fa-bars"></i>
+
+        </div>
+
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="skills.html">
+                Skills
+            </a>
+
+            <a href="projects.html">
+                Projects
+            </a>
+
+            <a href="education.html">
+                Education
+            </a>
+
+            <a href="certificates.html"
+               class="active">
+
+                Certificates
+
+            </a>
+
+            <a href="contact.html">
+                Contact
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =========================================================
+         CERTIFICATES SECTION
+    ========================================================== -->
+
+    <section class="certificates">
+
+
+        <div class="certificates-content">
+
+
+            <!-- HEADING -->
+
+            <h1>
+
+                My <span>Certificates</span>
+
+            </h1>
+
+
+            <p class="certificates-intro">
+
+                Here are some of my professional achievements,
+                certifications, and learning accomplishments.
+                New certificates are automatically added here
+                when they are uploaded.
+
+            </p>
+
+
+            <!-- LOADING STATUS -->
+
+            <div id="certificatesStatus"
+                 class="dynamic-status">
+
+                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                Loading certificates...
+
+            </div>
+
+
+            <!-- ================================================
+                 DYNAMIC CERTIFICATES CONTAINER
+            ================================================= -->
+
+            <div id="certificatesList"
+                 class="certificates-list">
+
+            </div>
+
+
+            <!-- ================================================
+                 EMPTY STATE
+            ================================================= -->
+
+            <div id="noCertificatesMessage"
+                 class="no-content-message"
+                 style="display: none;">
+
+                <i class="fa-solid fa-certificate"></i>
+
+                <h2>
+                    No Certificates Available Yet
+                </h2>
+
+                <p>
+                    Certificates will automatically appear here
+                    after they are uploaded.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =========================================================
+         SCRIPTS
+    ========================================================== -->
+
+    <script src="script.js"></script>
+
+
+    <script type="module"
+            src="certificates.js">
+    </script>
+
+
+</body>
+
+</html>
