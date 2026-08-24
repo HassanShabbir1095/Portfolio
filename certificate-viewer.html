@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -11,34 +10,175 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <title>
+        Certificate Viewer - Hassan Portfolio
+    </title>
+
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-    <title>
-        Certificate - Hassan Portfolio
-    </title>
-
-
     <style>
 
         /* =====================================================
-           CERTIFICATE VIEWER
-        ====================================================== */
+           RESET
+        ===================================================== */
 
-        .certificate-viewer {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+
+        /* =====================================================
+           BODY
+        ===================================================== */
+
+        body {
+            min-height: 100vh;
+            background: #0b0f19;
+            color: #ffffff;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            overflow-x: hidden;
+
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .viewer-header {
             width: 100%;
 
-            min-height: calc(100vh - 80px);
+            padding:
+                18px 25px;
 
-            padding: 30px;
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            background:
+                rgba(15, 23, 42, 0.96);
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, 0.1);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            backdrop-filter:
+                blur(10px);
+        }
+
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .viewer-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            min-width: 0;
+        }
+
+        .viewer-title i {
+            font-size: 22px;
+            color: #00d9ff;
+
+            flex-shrink: 0;
+        }
+
+        .viewer-title span {
+            font-size: 18px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        /* =====================================================
+           BACK BUTTON
+        ===================================================== */
+
+        .back-button {
+            text-decoration: none;
+
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.15);
+
+            padding:
+                9px 16px;
+
+            border-radius: 8px;
+
+            transition:
+                0.25s ease;
+
+            white-space: nowrap;
+
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background:
+                rgba(255, 255, 255, 0.15);
+        }
+
+
+        /* =====================================================
+           VIEWER CONTAINER
+        ===================================================== */
+
+        .viewer-container {
+            width: 100%;
+
+            max-width: 1200px;
+
+            margin:
+                30px auto;
+
+            padding:
+                0 20px 40px;
+        }
+
+
+        /* =====================================================
+           CERTIFICATE PAGES CONTAINER
+        ===================================================== */
+
+        #certificatePages {
+            width: 100%;
 
             display: flex;
 
@@ -46,188 +186,228 @@
 
             align-items: center;
 
-            box-sizing: border-box;
-
+            gap: 30px;
         }
 
 
-        .certificate-viewer-header {
+        /* =====================================================
+           PAGE WRAPPER
+        ===================================================== */
+
+        .certificate-page-wrapper {
+            position: relative;
 
             width: 100%;
-
-            max-width: 1200px;
 
             display: flex;
 
-            justify-content: space-between;
+            justify-content: center;
 
             align-items: center;
 
-            margin-bottom: 20px;
-
+            overflow: visible;
         }
 
 
-        .certificate-viewer-title {
+        /* =====================================================
+           CERTIFICATE CANVAS
+        ===================================================== */
 
-            margin: 0;
-
-            font-size: 28px;
-
-        }
-
-
-        .certificate-viewer-title span {
-
-            color: #b74b4b;
-
-        }
-
-
-        .back-button {
-
-            display: inline-flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            text-decoration: none;
-
-            padding: 10px 18px;
-
-            border-radius: 8px;
-
-            border: 1px solid #b74b4b;
-
-            color: #b74b4b;
-
-            transition: 0.3s ease;
-
-        }
-
-
-        .back-button:hover {
-
-            background: #b74b4b;
-
-            color: white;
-
-        }
-
-
-        .certificate-frame-container {
-
-            width: 100%;
-
-            max-width: 1200px;
-
-            height: calc(100vh - 180px);
-
-            min-height: 600px;
-
-            border-radius: 12px;
-
-            overflow: hidden;
-
-            box-shadow:
-                0 0 25px rgba(
-                    0,
-                    0,
-                    0,
-                    0.25
-                );
-
-            background: #222;
-
-        }
-
-
-        .certificate-frame {
-
-            width: 100%;
-
-            height: 100%;
-
-            border: none;
-
+        .certificate-page {
             display: block;
 
+            max-width: 100%;
+
+            width: auto;
+
+            height: auto;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 15px 50px
+                rgba(0, 0, 0, 0.45);
+
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            -webkit-user-drag: none;
+
+            pointer-events: none;
         }
 
 
-        .certificate-loading {
+        /* =====================================================
+           PROTECTION LAYER
+        ===================================================== */
 
+        .certificate-protection-layer {
             position: absolute;
 
-            left: 50%;
+            inset: 0;
 
-            top: 50%;
+            z-index: 10;
 
-            transform:
-                translate(
-                    -50%,
-                    -50%
-                );
+            background: transparent;
 
-            color: white;
+            user-select: none;
+
+            -webkit-user-select: none;
+
+            -webkit-touch-callout: none;
+
+            cursor: default;
+        }
+
+
+        /* =====================================================
+           LOADING / ERROR STATUS
+        ===================================================== */
+
+        .status {
+            min-height: 300px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 15px;
 
             text-align: center;
 
+            padding:
+                30px 20px;
+        }
+
+        .status i {
+            font-size: 35px;
+
+            color: #00d9ff;
+        }
+
+        .status h2 {
+            font-size: 20px;
+        }
+
+        .status p {
+            color:
+                rgba(255, 255, 255, 0.65);
+
+            max-width: 600px;
+
+            line-height: 1.6;
         }
 
 
-        .certificate-error {
+        /* =====================================================
+           PAGE LOADING INDICATOR
+        ===================================================== */
 
-            display: none;
+        .page-loading {
+            width: 100%;
 
-            text-align: center;
+            min-height: 150px;
 
-            padding: 40px;
+            display: flex;
 
+            align-items: center;
+
+            justify-content: center;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+            color:
+                rgba(255, 255, 255, 0.75);
+        }
+
+        .page-loading i {
+            color: #00d9ff;
+
+            font-size: 25px;
         }
 
 
-        .certificate-error i {
+        /* =====================================================
+           MOBILE
+        ===================================================== */
 
-            font-size: 50px;
+        @media (max-width: 600px) {
 
-            margin-bottom: 20px;
-
-            color: #b74b4b;
-
-        }
-
-
-        @media (max-width: 768px) {
-
-            .certificate-viewer {
-
-                padding: 15px;
-
+            .viewer-header {
+                padding:
+                    14px;
             }
 
-
-            .certificate-viewer-header {
-
-                flex-direction: column;
-
-                gap: 15px;
-
-                align-items: flex-start;
-
+            .viewer-title {
+                gap: 8px;
             }
 
+            .viewer-title i {
+                font-size: 18px;
+            }
 
-            .certificate-frame-container {
+            .viewer-title span {
+                font-size: 14px;
+            }
 
-                height:
-                    calc(
-                        100vh - 220px
-                    );
+            .back-button {
+                padding:
+                    8px 11px;
 
-                min-height: 500px;
+                font-size:
+                    13px;
+            }
 
+            .viewer-container {
+                padding:
+                    0 8px 30px;
+
+                margin-top:
+                    15px;
+            }
+
+            #certificatePages {
+                gap: 20px;
+            }
+
+            .certificate-page-wrapper {
+                width: 100%;
+            }
+
+            .status {
+                min-height: 250px;
+            }
+
+            .status h2 {
+                font-size: 18px;
+            }
+
+            .status p {
+                font-size: 14px;
+            }
+
+        }
+
+
+        /* =====================================================
+           VERY SMALL SCREENS
+        ===================================================== */
+
+        @media (max-width: 400px) {
+
+            .viewer-title span {
+                display: none;
+            }
+
+            .back-button {
+                font-size: 12px;
             }
 
         }
@@ -244,55 +424,29 @@
          HEADER
     ====================================================== -->
 
-    <header>
+    <header class="viewer-header">
 
-        <a
-            href="index.html"
-            class="logo"
-        >
+        <div class="viewer-title">
 
-            Hassan
+            <i class="fa-solid fa-certificate"></i>
 
-        </a>
-
-
-        <div class="hamburger">
-
-            <i class="fas fa-bars"></i>
+            <span>
+                Certificate Viewer
+            </span>
 
         </div>
 
 
-        <nav>
+        <a
+            href="certificates.html"
+            class="back-button"
+        >
 
-            <a href="index.html">
-                Home
-            </a>
+            <i class="fa-solid fa-arrow-left"></i>
 
-            <a href="skills.html">
-                Skills
-            </a>
+            Back
 
-            <a href="projects.html">
-                Projects
-            </a>
-
-            <a href="education.html">
-                Education
-            </a>
-
-            <a
-                href="certificates.html"
-                class="active"
-            >
-                Certificates
-            </a>
-
-            <a href="contact.html">
-                Contact
-            </a>
-
-        </nav>
+        </a>
 
     </header>
 
@@ -301,176 +455,85 @@
          CERTIFICATE VIEWER
     ====================================================== -->
 
-    <main class="certificate-viewer">
+    <main class="viewer-container">
 
 
-        <div class="certificate-viewer-header">
-
-            <h1 class="certificate-viewer-title">
-
-                Certificate <span>Viewer</span>
-
-            </h1>
-
-
-            <a
-                href="certificates.html"
-                class="back-button"
-            >
-
-                <i class="fa-solid fa-arrow-left"></i>
-
-                Back to Certificates
-
-            </a>
-
-        </div>
-
-
-        <!-- =================================================
-             PDF
-        ================================================== -->
+        <!-- LOADING / ERROR STATUS -->
 
         <div
-            id="certificateFrameContainer"
-            class="certificate-frame-container"
-        >
-
-            <iframe
-                id="certificateFrame"
-                class="certificate-frame"
-                title="Certificate PDF"
-                loading="eager"
-            ></iframe>
-
-        </div>
-
-
-        <!-- =================================================
-             ERROR
-        ================================================== -->
-
-        <div
-            id="certificateError"
-            class="certificate-error"
+            id="status"
+            class="status"
         >
 
             <i
-                class="fa-solid fa-triangle-exclamation"
+                class="fa-solid fa-spinner fa-spin"
             ></i>
 
             <h2>
-                Certificate Could Not Be Loaded
+                Loading certificate...
             </h2>
 
             <p>
-                The certificate file could not be displayed.
+                Please wait while the certificate is loaded.
             </p>
 
         </div>
+
+
+        <!-- PDF PAGES -->
+
+        <div
+            id="certificatePages"
+        ></div>
 
 
     </main>
 
 
     <!-- =====================================================
-         JAVASCRIPT
+         CERTIFICATE VIEWER SCRIPT
     ====================================================== -->
 
-    <script src="script.js"></script>
+    <script
+        type="module"
+        src="certificate-viewer.js"
+    ></script>
 
+
+    <!-- =====================================================
+         BASIC PROTECTION
+    ====================================================== -->
 
     <script>
 
-        // ====================================================
-        // CLOUDFLARE WORKER
-        // ====================================================
+        document.addEventListener(
+            "contextmenu",
+            function(event) {
 
-        const WORKER_URL =
-            "https://hassan-portfolio-worker.hassanshabbir1095.workers.dev";
+                event.preventDefault();
 
-
-        // ====================================================
-        // GET PATH FROM URL
-        // ====================================================
-
-        const params =
-            new URLSearchParams(
-                window.location.search
-            );
+            }
+        );
 
 
-        const certificatePath =
-            params.get(
-                "path"
-            );
+        document.addEventListener(
+            "dragstart",
+            function(event) {
+
+                event.preventDefault();
+
+            }
+        );
 
 
-        // ====================================================
-        // ELEMENTS
-        // ====================================================
+        document.addEventListener(
+            "selectstart",
+            function(event) {
 
-        const frame =
-            document.getElementById(
-                "certificateFrame"
-            );
+                event.preventDefault();
 
-
-        const frameContainer =
-            document.getElementById(
-                "certificateFrameContainer"
-            );
-
-
-        const errorMessage =
-            document.getElementById(
-                "certificateError"
-            );
-
-
-        // ====================================================
-        // VALIDATE PATH
-        // ====================================================
-
-        if (
-            !certificatePath ||
-            !certificatePath.startsWith(
-                "certificates/"
-            ) ||
-            !certificatePath
-                .toLowerCase()
-                .endsWith(".pdf")
-        ) {
-
-            frameContainer.style.display =
-                "none";
-
-
-            errorMessage.style.display =
-                "block";
-
-        } else {
-
-
-            // =================================================
-            // CREATE WORKER PDF URL
-            // =================================================
-
-            const pdfURL =
-                `${WORKER_URL}/certificate?path=` +
-                `${encodeURIComponent(
-                    certificatePath
-                )}`;
-
-
-            // =================================================
-            // DISPLAY PDF
-            // =================================================
-
-            frame.src =
-                pdfURL;
-
-        }
+            }
+        );
 
     </script>
 

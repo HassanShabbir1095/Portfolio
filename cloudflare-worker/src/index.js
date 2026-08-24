@@ -70,7 +70,10 @@ function getCorsHeaders(origin) {
             "Content-Type",
 
         "Access-Control-Max-Age":
-            "86400"
+            "86400",
+
+        "Vary":
+            "Origin"
 
     };
 
@@ -98,7 +101,41 @@ function jsonResponse(
             headers: {
 
                 "Content-Type":
-                    "application/json",
+                    "application/json; charset=UTF-8",
+
+                ...getCorsHeaders(origin)
+
+            }
+
+        }
+
+    );
+
+}
+
+
+// ============================================================
+// TEXT RESPONSE
+// ============================================================
+
+function textResponse(
+    message,
+    status,
+    origin
+) {
+
+    return new Response(
+
+        message,
+
+        {
+
+            status,
+
+            headers: {
+
+                "Content-Type":
+                    "text/plain; charset=UTF-8",
 
                 ...getCorsHeaders(origin)
 
@@ -352,7 +389,7 @@ async function uploadToGitHub(
                         `Bearer ${env.GITHUB_TOKEN}`,
 
                     "X-GitHub-Api-Version":
-                        "2026-03-10",
+                        "2022-11-28",
 
                     "User-Agent":
                         "hassan-portfolio-worker",
@@ -430,7 +467,7 @@ async function uploadToGitHub(
 
 
 // ============================================================
-// ARRAY BUFFER → BASE64
+// ARRAY BUFFER -> BASE64
 // ============================================================
 
 function arrayBufferToBase64(
@@ -478,6 +515,52 @@ function arrayBufferToBase64(
 
 
 // ============================================================
+// VERIFY PDF FILE SIGNATURE
+// ============================================================
+//
+// A real PDF begins with:
+//
+// %PDF-
+//
+// This is more reliable than checking GitHub's Content-Type
+// header because GitHub Raw may return application/octet-stream.
+//
+// ============================================================
+
+function isValidPdf(
+    arrayBuffer
+) {
+
+    const bytes =
+        new Uint8Array(
+            arrayBuffer
+        );
+
+
+    // A PDF signature requires at least 5 bytes.
+    if (
+        bytes.length < 5
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+
+        bytes[0] === 0x25 && // %
+        bytes[1] === 0x50 && // P
+        bytes[2] === 0x44 && // D
+        bytes[3] === 0x46 && // F
+        bytes[4] === 0x2D    // -
+
+    );
+
+}
+
+
+// ============================================================
 // HANDLE FILE UPLOAD
 // ============================================================
 
@@ -488,6 +571,21 @@ async function handleUpload(
 
     const origin =
         request.headers.get("Origin") || "";
+
+
+    // --------------------------------------------------------
+    // CHECK GITHUB TOKEN
+    // --------------------------------------------------------
+
+    if (
+        !env.GITHUB_TOKEN
+    ) {
+
+        throw new Error(
+            "GitHub token is not configured in the Worker."
+        );
+
+    }
 
 
     // --------------------------------------------------------
@@ -614,6 +712,39 @@ async function handleUpload(
         await file.arrayBuffer();
 
 
+    // --------------------------------------------------------
+    // EXTRA PDF VALIDATION
+    // --------------------------------------------------------
+    //
+    // Check the actual uploaded file signature.
+    //
+    // --------------------------------------------------------
+
+    if (
+        type === "certificate" &&
+        !isValidPdf(arrayBuffer)
+    ) {
+
+        return jsonResponse(
+
+            {
+
+                success: false,
+
+                message:
+                    "The uploaded certificate is not a valid PDF file."
+
+            },
+
+            415,
+
+            origin
+
+        );
+
+    }
+
+
     const base64Content =
         arrayBufferToBase64(
             arrayBuffer
@@ -737,30 +868,14 @@ async function handleUpload(
 // ============================================================
 // HANDLE CERTIFICATE VIEW
 // ============================================================
-//
-// IMPORTANT:
-//
-// The browser does NOT directly access GitHub.
-//
-// Instead:
-//
-// Browser
-//    ↓
-// Cloudflare Worker
-//    ↓
-// GitHub Raw PDF
-//    ↓
-// Worker returns PDF as "inline"
-//    ↓
-// Browser PDF viewer
-//
-// Only files inside certificates/ are allowed.
-//
-// ============================================================
 
 async function handleCertificateView(
     request
 ) {
+
+    const origin =
+        request.headers.get("Origin") || "";
+
 
     const url =
         new URL(
@@ -780,22 +895,13 @@ async function handleCertificateView(
 
     if (!path) {
 
-        return new Response(
+        return textResponse(
 
             "Certificate path is required.",
 
-            {
+            400,
 
-                status: 400,
-
-                headers: {
-
-                    "Content-Type":
-                        "text/plain; charset=UTF-8"
-
-                }
-
-            }
+            origin
 
         );
 
@@ -806,40 +912,53 @@ async function handleCertificateView(
     // SECURITY VALIDATION
     // --------------------------------------------------------
     //
-    // Only certificates/*.pdf are allowed.
+    // Only files matching:
     //
-    // This prevents this Worker endpoint from becoming
-    // a general-purpose proxy for arbitrary URLs.
+    // certificates/*.pdf
     //
+    // are allowed.
+    //
+    // --------------------------------------------------------
 
     if (
-        !path.startsWith("certificates/")
+
+        !path.startsWith(
+            "certificates/"
+        )
+
         ||
-        !path.toLowerCase().endsWith(".pdf")
+
+        !path.toLowerCase().endsWith(
+            ".pdf"
+        )
+
         ||
-        path.includes("..")
+
+        path.includes(
+            ".."
+        )
+
         ||
-        path.includes("\\")
+
+        path.includes(
+            "\\"
+        )
+
         ||
-        path.includes("//")
+
+        path.includes(
+            "//"
+        )
+
     ) {
 
-        return new Response(
+        return textResponse(
 
             "Invalid certificate path.",
 
-            {
+            400,
 
-                status: 400,
-
-                headers: {
-
-                    "Content-Type":
-                        "text/plain; charset=UTF-8"
-
-                }
-
-            }
+            origin
 
         );
 
@@ -858,31 +977,30 @@ async function handleCertificateView(
         `${path}`;
 
 
+    console.log(
+        "Loading certificate:",
+        githubURL
+    );
+
+
     // --------------------------------------------------------
-    // FETCH PDF FROM GITHUB
+    // FETCH FILE FROM GITHUB
     // --------------------------------------------------------
 
     const githubResponse =
         await fetch(
-            githubURL
-        );
 
-
-    if (!githubResponse.ok) {
-
-        return new Response(
-
-            "Certificate could not be found.",
+            githubURL,
 
             {
 
-                status:
-                    githubResponse.status,
-
                 headers: {
 
-                    "Content-Type":
-                        "text/plain; charset=UTF-8"
+                    "Accept":
+                        "application/pdf,application/octet-stream;q=0.9,*/*;q=0.8",
+
+                    "User-Agent":
+                        "hassan-portfolio-worker"
 
                 }
 
@@ -890,11 +1008,37 @@ async function handleCertificateView(
 
         );
 
+
+    // --------------------------------------------------------
+    // FILE NOT FOUND / GITHUB ERROR
+    // --------------------------------------------------------
+
+    if (
+        !githubResponse.ok
+    ) {
+
+        console.error(
+            "GitHub certificate fetch failed:",
+            githubResponse.status,
+            githubURL
+        );
+
+
+        return textResponse(
+
+            `Certificate could not be found. GitHub returned ${githubResponse.status}.`,
+
+            githubResponse.status,
+
+            origin
+
+        );
+
     }
 
 
     // --------------------------------------------------------
-    // GET PDF CONTENT
+    // READ FILE BYTES
     // --------------------------------------------------------
 
     const pdfData =
@@ -902,7 +1046,40 @@ async function handleCertificateView(
 
 
     // --------------------------------------------------------
-    // RETURN PDF INLINE
+    // VERIFY ACTUAL PDF SIGNATURE
+    // --------------------------------------------------------
+    //
+    // Do NOT rely on GitHub's Content-Type.
+    //
+    // Verify the actual binary content instead.
+    //
+    // --------------------------------------------------------
+
+    if (
+        !isValidPdf(pdfData)
+    ) {
+
+        console.error(
+            "GitHub returned a file that is not a valid PDF:",
+            githubURL
+        );
+
+
+        return textResponse(
+
+            "The requested certificate file is not a valid PDF.",
+
+            415,
+
+            origin
+
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // RETURN PDF TO BROWSER
     // --------------------------------------------------------
 
     return new Response(
@@ -921,11 +1098,16 @@ async function handleCertificateView(
                 "Content-Disposition":
                     "inline",
 
+                "Content-Length":
+                    String(pdfData.byteLength),
+
                 "Cache-Control":
                     "public, max-age=3600",
 
                 "X-Content-Type-Options":
-                    "nosniff"
+                    "nosniff",
+
+                ...getCorsHeaders(origin)
 
             }
 
@@ -960,7 +1142,7 @@ export default {
 
 
         // ----------------------------------------------------
-        // CORS
+        // CORS PREFLIGHT
         // ----------------------------------------------------
 
         if (
@@ -979,9 +1161,13 @@ export default {
         // ----------------------------------------------------
 
         if (
+
             url.pathname === "/"
+
             &&
+
             request.method === "GET"
+
         ) {
 
             return jsonResponse(
@@ -1012,9 +1198,13 @@ export default {
         // ----------------------------------------------------
 
         if (
+
             url.pathname === "/certificate"
+
             &&
+
             request.method === "GET"
+
         ) {
 
             try {
@@ -1031,22 +1221,14 @@ export default {
                 );
 
 
-                return new Response(
+                return textResponse(
 
+                    error.message ||
                     "Unable to load certificate.",
 
-                    {
+                    500,
 
-                        status: 500,
-
-                        headers: {
-
-                            "Content-Type":
-                                "text/plain; charset=UTF-8"
-
-                        }
-
-                    }
+                    origin
 
                 );
 
@@ -1060,9 +1242,13 @@ export default {
         // ----------------------------------------------------
 
         if (
+
             url.pathname === "/upload"
+
             &&
+
             request.method === "POST"
+
         ) {
 
             try {

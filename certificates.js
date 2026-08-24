@@ -36,12 +36,10 @@ const certificatesList =
         "certificatesList"
     );
 
-
 const certificatesStatus =
     document.getElementById(
         "certificatesStatus"
     );
-
 
 const noCertificatesMessage =
     document.getElementById(
@@ -60,13 +58,10 @@ function escapeHTML(value) {
             "div"
         );
 
-
     div.textContent =
         value ?? "";
 
-
     return div.innerHTML;
-
 }
 
 
@@ -82,7 +77,6 @@ function createCertificateViewerURL(
         `certificate-viewer.html?path=` +
         `${encodeURIComponent(storagePath)}`
     );
-
 }
 
 
@@ -101,21 +95,17 @@ function createCertificateCard(
 
 
     // --------------------------------------------------------
-    // IMPORTANT:
-    //
-    // Use storagePath instead of fileURL.
-    //
-    // Example:
-    //
-    // certificates/1787548600636-certificate.pdf
-    //
-    // The viewer will send this path to Cloudflare Worker.
+    // CERTIFICATE STORAGE PATH
     // --------------------------------------------------------
 
     const storagePath =
         certificate.storagePath ||
         "";
 
+
+    // --------------------------------------------------------
+    // VIEWER URL
+    // --------------------------------------------------------
 
     const viewerURL =
         storagePath
@@ -124,6 +114,10 @@ function createCertificateCard(
             )
             : "#";
 
+
+    // --------------------------------------------------------
+    // CREATE CARD
+    // --------------------------------------------------------
 
     const card =
         document.createElement(
@@ -134,6 +128,10 @@ function createCertificateCard(
     card.className =
         "certificate-card";
 
+
+    // --------------------------------------------------------
+    // CARD HTML
+    // --------------------------------------------------------
 
     card.innerHTML = `
 
@@ -195,7 +193,6 @@ function createCertificateCard(
 
 
     return card;
-
 }
 
 
@@ -220,7 +217,6 @@ function loadCertificates() {
 
     const certificatesQuery =
         query(
-
             collection(
                 db,
                 "certificates"
@@ -230,7 +226,6 @@ function loadCertificates() {
                 "createdAt",
                 "desc"
             )
-
         );
 
 
@@ -266,7 +261,6 @@ function loadCertificates() {
 
 
                 return;
-
             }
 
 

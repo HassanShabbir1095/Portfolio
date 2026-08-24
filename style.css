@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
 
+
 * {
     margin: 0;
     padding: 0;
@@ -10,17 +11,20 @@
     font-family: 'Poppins', sans-serif;
 }
 
+
 html {
     font-size: 62.5%;
 }
 
+
 body {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     overflow-x: hidden;
     background-color: #07111F;
     color: white;
 }
+
 
 h1 {
     font-size: 6rem;
@@ -29,6 +33,7 @@ h1 {
     color: white;
 }
 
+
 h3 {
     font-size: 4rem;
     font-weight: 700;
@@ -36,12 +41,19 @@ h3 {
     color: white;
 }
 
-p, li {
+
+p,
+li {
     font-size: 1.6rem;
     font-weight: 400;
     line-height: 1.6;
     color: white;
 }
+
+
+/* ============================================================
+   HEADER
+============================================================ */
 
 header {
     margin-top: 20px;
@@ -58,6 +70,7 @@ header {
     z-index: 100;
 }
 
+
 .logo {
     font-size: 3rem;
     color: #38BDF8;
@@ -66,9 +79,11 @@ header {
     transition: 0.5s ease;
 }
 
+
 .logo:hover {
     transform: scale(1.1);
 }
+
 
 .hamburger {
     display: none;
@@ -76,6 +91,7 @@ header {
     font-size: 2.5rem;
     color: white;
 }
+
 
 nav a {
     font-size: 1.8rem;
@@ -86,13 +102,16 @@ nav a {
     border-bottom: 3px solid transparent;
 }
 
+
 nav a:hover,
 nav a.active {
     color: #38BDF8;
     border-bottom: 3px solid #38BDF8;
 }
 
-@media(max-width:995px) {
+
+@media (max-width: 995px) {
+
     .hamburger {
         display: block;
     }
@@ -127,12 +146,23 @@ nav a.active {
         border-radius: 0.5rem;
         border-bottom: 0.5rem solid #38BDF8;
     }
+
 }
+
+
+/* ============================================================
+   SECTIONS
+============================================================ */
 
 section {
     min-height: 100vh;
     padding: 5rem 9% 5rem;
 }
+
+
+/* ============================================================
+   HOME
+============================================================ */
 
 .home {
     display: flex;
@@ -142,15 +172,18 @@ section {
     background-color: #07111F;
 }
 
+
 .home .home-content h1 {
     font-size: 6rem;
     font-weight: 700;
     line-height: 1.3;
 }
 
+
 span {
     color: #38BDF8;
 }
+
 
 .home-content h3 {
     font-size: 4rem;
@@ -158,13 +191,16 @@ span {
     font-weight: 700;
 }
 
+
 .home-content p {
     font-size: 1.6rem;
 }
 
+
 .home-img {
     border-radius: 50%;
 }
+
 
 .home-img img {
     position: relative;
@@ -175,10 +211,12 @@ span {
     transition: 0.2s linear;
 }
 
+
 .home-img img:hover {
     font-size: 1.8rem;
     font-weight: 500;
 }
+
 
 .social-icons a {
     display: inline-flex;
@@ -195,12 +233,14 @@ span {
     color: #38BDF8;
 }
 
+
 .social-icons a:hover {
     color: #07111F;
     transform: scale(1.3) translateY(-5px);
     background-color: #38BDF8;
     box-shadow: 0 0 25px #38BDF8;
 }
+
 
 .btn {
     display: inline-block;
@@ -216,6 +256,7 @@ span {
     cursor: pointer;
 }
 
+
 .btn:hover {
     transform: scale3d(1.03);
     background-color: #38BDF8;
@@ -223,13 +264,18 @@ span {
     box-shadow: 0 0 25px #38BDF8;
 }
 
+
 @media (max-width: 1000px) {
+
     .home {
         gap: 4rem;
     }
+
 }
 
-@media(max-width:995px) {
+
+@media (max-width: 995px) {
+
     .home {
         flex-direction: column;
         margin: 5rem 4rem;
@@ -247,7 +293,13 @@ span {
         width: 70vw;
         margin-top: 4rem;
     }
+
 }
+
+
+/* ============================================================
+   CONTACT
+============================================================ */
 
 .contact {
     display: flex;
@@ -257,11 +309,13 @@ span {
     padding: 5rem 9%;
 }
 
+
 .contact ul {
     list-style-type: disc;
     padding-left: 2rem;
     margin-bottom: 2rem;
 }
+
 
 .contact-form {
     width: 100%;
@@ -270,6 +324,7 @@ span {
     flex-direction: column;
     gap: 1.5rem;
 }
+
 
 .contact-form input,
 .contact-form textarea {
@@ -282,14 +337,16 @@ span {
     resize: none;
 }
 
+
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
     color: #999;
 }
 
-/* ================================
+
+/* ============================================================
    CERTIFICATES PAGE
-================================ */
+============================================================ */
 
 .certificates {
     min-height: 100vh;
@@ -297,14 +354,17 @@ span {
     background-color: #07111F;
 }
 
+
 .certificates-content {
     max-width: 1000px;
     margin: 0 auto;
 }
 
+
 .certificates-content h1 {
     margin-bottom: 2rem;
 }
+
 
 .certificates-intro {
     max-width: 800px;
@@ -313,12 +373,40 @@ span {
     line-height: 1.8;
 }
 
+
+/* ============================================================
+   CERTIFICATES LIST
+============================================================ */
+
+.certificates-list {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(320px, 1fr)
+        );
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+
+/* ============================================================
+   CERTIFICATE CARD
+============================================================ */
+
 .certificate-card {
+    position: relative;
+
     display: flex;
-    align-items: center;
-    gap: 3rem;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 2rem;
 
     padding: 3rem;
+
+    min-height: 34rem;
 
     background-color: #0D1B2A;
 
@@ -326,50 +414,185 @@ span {
 
     border-radius: 2rem;
 
-    transition: 0.3s ease;
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
+
 
 .certificate-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 0 25px #38BDF8;
 }
 
+
+/* ============================================================
+   CERTIFICATE NUMBER
+============================================================ */
+
+.certificate-number {
+    position: absolute;
+
+    top: 1.5rem;
+    right: 1.8rem;
+
+    font-size: 1.3rem;
+
+    font-weight: 700;
+
+    color: #38BDF8;
+
+    opacity: 0.85;
+}
+
+
+/* ============================================================
+   CERTIFICATE ICON
+============================================================ */
+
 .certificate-icon {
     display: flex;
+
     justify-content: center;
+
     align-items: center;
 
+    width: 9rem;
+
     min-width: 9rem;
+
     height: 9rem;
 
     border: 0.2rem solid #38BDF8;
+
     border-radius: 50%;
 
     font-size: 4rem;
+
     color: #38BDF8;
 }
 
+
+/* ============================================================
+   CERTIFICATE DETAILS
+============================================================ */
+
+.certificate-details {
+    width: 100%;
+}
+
+
 .certificate-details h2 {
     font-size: 2.6rem;
+
+    line-height: 1.35;
+
     margin-bottom: 1rem;
+
+    padding-right: 3rem;
+
     color: white;
+
+    overflow-wrap: anywhere;
 }
+
 
 .certificate-details p {
     margin-bottom: 2rem;
     font-size: 1.6rem;
 }
 
+
+/* ============================================================
+   CERTIFICATE BUTTONS
+============================================================ */
+
+.certificate-buttons {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 1rem;
+
+    margin-top: 1.8rem;
+}
+
+
 .certificate-btn {
     background-color: transparent;
 }
+
 
 .certificate-btn i {
     margin-right: 0.8rem;
 }
 
 
-/* Mobile Responsive Certificates */
+/* ============================================================
+   DYNAMIC STATUS
+============================================================ */
+
+.dynamic-status {
+    width: 100%;
+
+    text-align: center;
+
+    margin: 3rem 0;
+
+    font-size: 1.6rem;
+
+    color: #38BDF8;
+}
+
+
+.dynamic-status i {
+    margin-right: 0.8rem;
+}
+
+
+/* ============================================================
+   NO CONTENT MESSAGE
+============================================================ */
+
+.no-content-message {
+    width: 100%;
+
+    text-align: center;
+
+    padding: 4rem 2rem;
+
+    margin-top: 3rem;
+}
+
+
+.no-content-message i {
+    font-size: 4rem;
+
+    color: #38BDF8;
+
+    margin-bottom: 1.5rem;
+}
+
+
+.no-content-message h2 {
+    font-size: 2.2rem;
+
+    margin-bottom: 1rem;
+}
+
+
+.no-content-message p {
+    font-size: 1.5rem;
+
+    opacity: 0.8;
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVE CERTIFICATES
+============================================================ */
 
 @media (max-width: 768px) {
 
@@ -377,26 +600,59 @@ span {
         padding: 12rem 6% 5rem;
     }
 
+    .certificates-content h1 {
+        font-size: 4.5rem;
+    }
+
     .certificate-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2rem;
+        padding: 2.5rem;
+        min-height: auto;
     }
 
     .certificate-icon {
+        width: 7rem;
         min-width: 7rem;
         height: 7rem;
         font-size: 3rem;
     }
 
-    .certificates-content h1 {
-        font-size: 4.5rem;
+    .certificate-details h2 {
+        font-size: 2.3rem;
     }
+
 }
 
-/* =========================================
+
+@media (max-width: 600px) {
+
+    .certificates {
+        padding: 11rem 5% 4rem;
+    }
+
+    .certificates-list {
+        grid-template-columns: 1fr;
+    }
+
+    .certificate-card {
+        padding: 2rem;
+    }
+
+    .certificate-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .certificate-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+}
+
+
+/* ============================================================
    PROJECTS PAGE
-========================================= */
+============================================================ */
 
 .projects {
     min-height: 100vh;
@@ -404,20 +660,24 @@ span {
     background-color: #07111F;
 }
 
+
 .projects-heading {
     text-align: center;
     max-width: 850px;
     margin: 0 auto 5rem;
 }
 
+
 .projects-heading h1 {
     margin-bottom: 1.5rem;
 }
+
 
 .projects-heading p {
     font-size: 1.7rem;
     line-height: 1.8;
 }
+
 
 .projects-grid {
     display: grid;
@@ -427,54 +687,52 @@ span {
     margin: 0 auto;
 }
 
+
 .project-card {
     position: relative;
     display: flex;
     flex-direction: column;
-
     min-height: 42rem;
     padding: 3rem;
-
     background-color: #0D1B2A;
     border: 0.2rem solid #38BDF8;
     border-radius: 1.8rem;
-
     overflow: hidden;
-
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
+
 
 .project-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 0 25px #38BDF8;
 }
 
+
 .project-number {
     position: absolute;
     top: 2rem;
     right: 2rem;
-
     font-size: 1.4rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.4);
 }
 
+
 .project-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 6.5rem;
     height: 6.5rem;
-
     margin-bottom: 2rem;
-
     border: 0.2rem solid #38BDF8;
     border-radius: 1.5rem;
-
     font-size: 3rem;
     color: #38BDF8;
 }
+
 
 .project-card h2 {
     font-size: 2.3rem;
@@ -483,11 +741,13 @@ span {
     color: white;
 }
 
+
 .project-card p {
     font-size: 1.45rem;
     line-height: 1.7;
     margin-bottom: 2rem;
 }
+
 
 .project-tags {
     display: flex;
@@ -496,46 +756,43 @@ span {
     margin-bottom: 2.5rem;
 }
 
+
 .project-tags span {
     padding: 0.6rem 1rem;
-
     font-size: 1.15rem;
     font-weight: 500;
-
     color: white;
     background-color: #07111F;
-
     border: 0.1rem solid #38BDF8;
     border-radius: 2rem;
 }
 
+
 .project-buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-top: auto;
 }
 
+
 .project-btn {
     flex: 1;
-
+    min-width: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.8rem;
-
     padding: 1.1rem 1rem;
-
     font-size: 1.3rem;
     font-weight: 600;
-
     color: #38BDF8;
     background-color: transparent;
-
     border: 0.2rem solid #38BDF8;
     border-radius: 0.8rem;
-
     transition: 0.3s ease;
 }
+
 
 .project-btn:hover {
     color: #07111F;
@@ -543,8 +800,6 @@ span {
     transform: translateY(-3px);
 }
 
-
-/* Tablets */
 
 @media (max-width: 1100px) {
 
@@ -554,8 +809,6 @@ span {
 
 }
 
-
-/* Mobile */
 
 @media (max-width: 700px) {
 
@@ -579,166 +832,23 @@ span {
         flex-direction: column;
     }
 
-}
-
-/* ============================================================
-   DYNAMIC CONTENT STATUS
-============================================================ */
-
-.dynamic-status {
-    width: 100%;
-    text-align: center;
-    margin: 3rem 0;
-    font-size: 1.6rem;
-    color: var(--main-color);
-}
-
-
-.dynamic-status i {
-    margin-right: 0.8rem;
-}
-
-
-/* ============================================================
-   NO CONTENT MESSAGE
-============================================================ */
-
-.no-content-message {
-    width: 100%;
-    text-align: center;
-    padding: 4rem 2rem;
-    margin-top: 3rem;
-}
-
-
-.no-content-message i {
-    font-size: 4rem;
-    color: var(--main-color);
-    margin-bottom: 1.5rem;
-}
-
-
-.no-content-message h2 {
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
-}
-
-
-.no-content-message p {
-    font-size: 1.5rem;
-    opacity: 0.8;
-}
-
-
-/* ============================================================
-   CERTIFICATES LIST
-============================================================ */
-
-.certificates-list {
-    display: grid;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(320px, 1fr)
-    );
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-
-/* ============================================================
-   CERTIFICATE NUMBER
-============================================================ */
-
-.certificate-number {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-
-    font-size: 1.2rem;
-    font-weight: bold;
-
-    color: var(--main-color);
-
-    opacity: 0.8;
-}
-
-
-/* ============================================================
-   CERTIFICATE CARD IMPROVEMENTS
-============================================================ */
-
-.certificate-card {
-    position: relative;
-}
-
-
-.certificate-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.8rem;
-}
-
-
-/* ============================================================
-   PROJECT CARD BUTTONS
-============================================================ */
-
-.project-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-
-.project-btn {
-    flex: 1;
-    min-width: 150px;
-}
-
-
-/* ============================================================
-   MOBILE RESPONSIVENESS
-============================================================ */
-
-@media (max-width: 600px) {
-
-    .certificate-buttons {
-        flex-direction: column;
-    }
-
-
-    .certificate-buttons .btn {
-        width: 100%;
-        text-align: center;
-    }
-
-
-    .project-buttons {
-        flex-direction: column;
-    }
-
-
     .project-btn {
         width: 100%;
         text-align: center;
     }
 
-
-    .certificates-list {
-        grid-template-columns: 1fr;
-    }
-
 }
+
 
 /* ============================================================
    ADMIN PAGE - FIREBASE DASHBOARD
-   ============================================================ */
+============================================================ */
 
 .admin-page {
     min-height: 100vh;
     padding: 15rem 8% 6rem;
 }
+
 
 .admin-container {
     width: 100%;
@@ -749,11 +859,12 @@ span {
 
 /* ============================================================
    ADMIN HEADING
-   ============================================================ */
+============================================================ */
 
 .admin-heading {
     margin-bottom: 2rem;
 }
+
 
 .admin-heading h1 {
     font-size: clamp(3rem, 6vw, 5.5rem);
@@ -761,9 +872,11 @@ span {
     margin-bottom: 1rem;
 }
 
+
 .admin-heading h1 span {
     color: #4db8ff;
 }
+
 
 .admin-description {
     max-width: 700px;
@@ -774,7 +887,7 @@ span {
 
 /* ============================================================
    ADMIN STATUS
-   ============================================================ */
+============================================================ */
 
 .admin-status {
     display: inline-flex;
@@ -786,9 +899,11 @@ span {
     background: rgba(255, 255, 255, 0.06);
 }
 
+
 .logged-in-status {
     color: #4ade80;
 }
+
 
 .error-status {
     color: #ff6b6b;
@@ -797,21 +912,19 @@ span {
 
 /* ============================================================
    ADMIN CARDS
-   ============================================================ */
+============================================================ */
 
 .admin-card {
     width: 100%;
     padding: 2.5rem;
     margin-bottom: 2rem;
     border-radius: 1.5rem;
-
     background: rgba(255, 255, 255, 0.04);
-
     border: 1px solid rgba(77, 184, 255, 0.2);
-
     box-shadow:
         0 1rem 3rem rgba(0, 0, 0, 0.15);
 }
+
 
 .login-card {
     max-width: 650px;
@@ -820,7 +933,7 @@ span {
 
 /* ============================================================
    CARD HEADER
-   ============================================================ */
+============================================================ */
 
 .admin-card-header {
     display: flex;
@@ -829,75 +942,68 @@ span {
     margin-bottom: 2rem;
 }
 
+
 .admin-card-header h2 {
     font-size: 2.2rem;
     margin-bottom: 0.5rem;
 }
+
 
 .admin-card-header p {
     font-size: 1.4rem;
     line-height: 1.6;
 }
 
+
 .admin-card-icon {
     width: 5rem;
     height: 5rem;
-
     min-width: 5rem;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 1.2rem;
-
     background: rgba(77, 184, 255, 0.1);
-
     color: #4db8ff;
-
     font-size: 2rem;
 }
 
 
 /* ============================================================
    INPUT GROUPS
-   ============================================================ */
+============================================================ */
 
 .admin-input-group {
     margin-bottom: 1.8rem;
 }
 
+
 .admin-input-group label {
     display: block;
     margin-bottom: 0.8rem;
-
     font-size: 1.4rem;
     font-weight: 600;
 }
+
 
 .admin-input-group label i {
     margin-right: 0.5rem;
     color: #4db8ff;
 }
 
+
 .admin-input-group input {
     width: 100%;
     height: 5rem;
-
     padding: 0 1.5rem;
-
     border-radius: 0.8rem;
-
     border: 1px solid rgba(255, 255, 255, 0.15);
-
     background: rgba(255, 255, 255, 0.05);
-
     color: #ffffff;
-
     font-size: 1.5rem;
-
     outline: none;
 }
+
 
 .admin-input-group input:focus {
     border-color: #4db8ff;
@@ -905,9 +1011,11 @@ span {
         0 0 0 3px rgba(77, 184, 255, 0.12);
 }
 
+
 .password-wrapper {
     position: relative;
 }
+
 
 .password-wrapper input {
     padding-right: 5rem;
@@ -916,40 +1024,33 @@ span {
 
 /* ============================================================
    PASSWORD TOGGLE
-   ============================================================ */
+============================================================ */
 
 .toggle-password-btn {
     position: absolute;
-
     top: 50%;
     right: 0;
-
     transform: translateY(-50%);
-
     width: 5rem;
     height: 5rem;
-
     border: none;
-
     background: transparent;
-
     color: #4db8ff;
-
     cursor: pointer;
-
     font-size: 1.7rem;
 }
 
 
 /* ============================================================
    MAIN ADMIN BUTTON
-   ============================================================ */
+============================================================ */
 
 .admin-main-btn {
     width: 100%;
     min-height: 5rem;
     margin-top: 0.5rem;
 }
+
 
 .admin-main-btn:disabled {
     opacity: 0.65;
@@ -959,30 +1060,25 @@ span {
 
 /* ============================================================
    FORGOT PASSWORD
-   ============================================================ */
+============================================================ */
 
 .forgot-password-btn {
     display: block;
-
     margin: 1.5rem auto 0;
-
     border: none;
-
     background: transparent;
-
     color: #4db8ff;
-
     cursor: pointer;
-
     font-size: 1.4rem;
-
     transition: 0.3s ease;
 }
+
 
 .forgot-password-btn:hover {
     opacity: 0.8;
     text-decoration: underline;
 }
+
 
 .forgot-password-btn:disabled {
     cursor: not-allowed;
@@ -992,21 +1088,20 @@ span {
 
 /* ============================================================
    ADMIN MESSAGE
-   ============================================================ */
+============================================================ */
 
 .admin-message {
     min-height: 2.2rem;
-
     margin-top: 1.2rem;
-
     font-size: 1.4rem;
-
     line-height: 1.6;
 }
+
 
 .success-message {
     color: #4ade80;
 }
+
 
 .error-message {
     color: #ff6b6b;
@@ -1015,53 +1110,45 @@ span {
 
 /* ============================================================
    ADMIN DASHBOARD WELCOME
-   ============================================================ */
+============================================================ */
 
 .admin-welcome-card {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-
     padding: 2rem;
-
     margin-bottom: 2rem;
-
     border-radius: 1.5rem;
-
     background:
         linear-gradient(
             135deg,
             rgba(77, 184, 255, 0.12),
             rgba(77, 184, 255, 0.03)
         );
-
     border:
         1px solid rgba(77, 184, 255, 0.2);
 }
 
+
 .admin-welcome-icon {
     width: 6rem;
     height: 6rem;
-
     min-width: 6rem;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
-
     background: rgba(77, 184, 255, 0.15);
-
     color: #4db8ff;
-
     font-size: 2.4rem;
 }
+
 
 .admin-welcome-card h2 {
     font-size: 2.2rem;
     margin-bottom: 0.5rem;
 }
+
 
 .admin-welcome-card p {
     font-size: 1.4rem;
@@ -1070,39 +1157,32 @@ span {
 
 /* ============================================================
    MANAGEMENT GRID
-   ============================================================ */
+============================================================ */
 
 .admin-management-grid {
     display: grid;
-
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
-
     gap: 2rem;
 }
 
 
 /* ============================================================
    UPLOAD INFORMATION
-   ============================================================ */
+============================================================ */
 
 .upload-info {
     display: flex;
     align-items: flex-start;
     gap: 0.8rem;
-
     padding: 1.2rem;
-
     margin-bottom: 1.5rem;
-
     border-radius: 0.8rem;
-
     background: rgba(77, 184, 255, 0.07);
-
     font-size: 1.3rem;
-
     line-height: 1.6;
 }
+
 
 .upload-info i {
     margin-top: 0.3rem;
@@ -1112,73 +1192,59 @@ span {
 
 /* ============================================================
    FILE INPUT
-   ============================================================ */
+============================================================ */
 
 .file-input {
     display: none;
 }
 
+
 .file-label {
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     gap: 1rem;
-
     width: 100%;
-
     min-height: 5rem;
-
     padding: 1rem 1.5rem;
-
     border:
         1px dashed rgba(77, 184, 255, 0.5);
-
     border-radius: 0.8rem;
-
     background:
         rgba(77, 184, 255, 0.05);
-
     color: #4db8ff;
-
     cursor: pointer;
-
     font-size: 1.4rem;
-
     transition: 0.3s ease;
 }
+
 
 .file-label:hover {
     background:
         rgba(77, 184, 255, 0.1);
-
     border-color: #4db8ff;
 }
 
+
 .selected-file {
     min-height: 2rem;
-
     margin: 1rem 0;
-
     font-size: 1.3rem;
-
     overflow-wrap: anywhere;
-
     color: rgba(255, 255, 255, 0.7);
 }
 
 
 /* ============================================================
    LOGOUT
-   ============================================================ */
+============================================================ */
 
 .logout-container {
     display: flex;
     justify-content: center;
-
     margin-top: 1rem;
 }
+
 
 .logout-btn {
     min-width: 18rem;
@@ -1186,8 +1252,8 @@ span {
 
 
 /* ============================================================
-   RESPONSIVE DESIGN
-   ============================================================ */
+   ADMIN RESPONSIVE DESIGN
+============================================================ */
 
 @media (max-width: 900px) {
 
